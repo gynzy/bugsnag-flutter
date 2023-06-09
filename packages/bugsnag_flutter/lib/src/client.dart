@@ -692,12 +692,12 @@ class Bugsnag extends BugsnagClient with DelegateClient {
     final detectDartErrors =
         autoDetectErrors && enabledErrorTypes.unhandledDartExceptions;
 
-    // guarding WidgetsFlutterBinding.ensureInitialized() catches
-    // async errors within the Flutter app
-    _runWithErrorDetection(
-      detectDartErrors,
-      () => WidgetsFlutterBinding.ensureInitialized(),
-    );
+    // // guarding WidgetsFlutterBinding.ensureInitialized() catches
+    // // async errors within the Flutter app
+    // _runWithErrorDetection(
+    //   detectDartErrors,
+    //   () => WidgetsFlutterBinding.ensureInitialized(),
+    // );
 
     if (projectPackages._includeDefaults) {
       projectPackages += BugsnagProjectPackages.only(_findProjectPackages());
@@ -752,7 +752,9 @@ class Bugsnag extends BugsnagClient with DelegateClient {
       await resumeSession().onError((error, stackTrace) => true);
     }
 
-    _runWithErrorDetection(detectDartErrors, () => runApp?.call());
+    if (runApp != null) {
+      _runWithErrorDetection(detectDartErrors, () => runApp.call());
+    }
   }
 
   void _runWithErrorDetection(
